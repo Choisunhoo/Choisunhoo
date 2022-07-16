@@ -1,0 +1,409 @@
+import pandas as pd 
+import matplotlib.pylab as plt
+import numpy as np
+
+# Electricity consumption 2011~2019 (Data Source: IEA (International Energy Agency))
+# Unit Twh (Terawatt hour) 1 Twh = 	1,000,000,000,000Wh
+
+Electricity_consumption_America = [5068.6, 5013.9, 5078.6, 5112.6, 5105.8, 5148.6, 5109.5, 5325.9, 5212.2]
+Electricity_consumption_EU = [3389.1, 3407.7, 3385.9, 3323.3, 3374.7, 3415.8, 3458.8, 3464.5, 3416.6]
+Electricity_consumption_Germany = [584.6, 583.2, 582.0, 569.8, 574.4, 574.2, 574.2, 567.5, 548.9]
+Electricity_consumption_Korea = [14.8, 15.1, 14.4, 14.0, 10.8, 13.7, 12.7, 12.7, 11.4 ]
+
+Electricity_consumption_China = [4433.0, 4693.7, 5122.0, 5495.9, 5543.0, 5880.0, 6382.1, 6792.3, 7154.3 ]
+Electricity_consumption_India = [857.5, 908.0, 965.9, 1061.3, 1116.2, 1181.7, 1248.0, 1333.9, 1349.3]
+Electricity_consumption_South_Africa = [237.5, 230.7, 230.1, 229.0, 228.2, 225.4, 227.1, 229.0, 224.6]
+
+# Electcity price
+# America (Electricity per kWh) / cent  from https://www.usinflationcalculator.com/inflation/electricity-prices-adjusted-for-inflation/
+Electricity_Price_America = [13.0, 13.0, 13.2, 13.7, 13.8, 13.5, 13.8, 13.6, 13.6]
+
+# EU (Electricity per kWh) / cent  day:7/02  exchange rate 1$ = 0.96€(EUR)
+# from https://www.statista.com/statistics/418049/electricity-prices-for-households-in-eu-28/
+Electricity_Price_EU = [18.95, 20.05, 20.95, 21.4, 21.8, 21.2, 21.25, 21.7, 22.6]
+
+
+# function that calculate Euro to Dollor
+def Euro_to_Dollar(S1, S2):
+    S1, S2 = map(float, input().split())
+    print((((S1 + S2)/2) / 96) * 100)
+
+# Germany (Electricity per kWh) / cent  day:7/02  exchange rate 1$ = 0.96€(EUR)
+# from https://www.statista.com/statistics/418078/electricity-prices-for-households-in-germany/
+
+# 1 case (1000~2500kwh) 
+Electricity_Price_Germany_1 = [28.9, 30.05, 33.05, 33.65, 33.45, 34.15, 35.0, 34.7, 34.85]
+# 2 case (2500~5000kwh) regressive tax
+Electricity_Price_Germany_2 = [26.35, 27.45, 30.4, 31.0, 30.7, 30.95, 31.75, 31.2, 31.05]
+
+# Korea (Electricity per kWh) / cent day:7/02  exchange rate 1$ = 1298.98₩(WON)
+# from https://www.korea.kr/news/reporterView.do?newsId=148882451
+Electricity_Price_Korea = [6.9, 7.6, 8.1, 8.5, 8.6, 8.5, 8.5, 8.5, 8.5] 
+
+# China (beijing) (Electricity per kWh) / cent day:7/02 exchange rate 1$ = 6.7010(CNY)
+# from https://www.ceicdata.com/en/china/electricity-price-36-city/cn-usage-price-electricity-for-industry-35-kv--above-beijing
+Electricity_Price_China = [11.2, 11.2, 11.2, 11.2, 12.1, 12.1, 12.1, 12.1, 12.1]
+
+# India (Electricity per kWh) / cent day:7/02 exchange rate 1$ = 78.951₹(INR)
+# from https://www.statista.com/statistics/808201/india-cost-of-state-electricity-supply/
+Electricity_Price_Inda = [5.0, 5.8, 6.4, 6.6, 6.6, 6.9, 6.9, 7.1, 7.6] 
+
+# South Africa (Electricity per kWh) / cent 
+# from https://www.thesouthafrican.com/news/eskom-electricity-prices-for-april-from-1970/
+Electricity_Price_South_Africa = [70.0, 78.0, 79.0, 79.0, 85.0, 85.0, 84.0, 89.0, 98.0] 
+
+
+# function that calculate precentile of each waste
+def waste_percentile_maker(waste_data):
+    
+    waste_percentile = [] 
+    for i in range(len(waste_data)):
+        waste_percentile.append(waste_data[i] / sum(waste_data) * 100)
+    
+    return waste_percentile
+
+
+
+
+plt.scatter(Electricity_consumption_Germany, Electricity_Price_Germany_1)
+z = np.polyfit(Electricity_consumption_Germany, Electricity_Price_Germany_1, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_Germany,p(Electricity_consumption_Germany),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of Germany(c.1)\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+plt.scatter(Electricity_consumption_Germany, Electricity_Price_Germany_2)
+z = np.polyfit(Electricity_consumption_Germany, Electricity_Price_Germany_2, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_Germany,p(Electricity_consumption_Germany),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of Germany(c.2)\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+plt.scatter(Electricity_consumption_Korea, Electricity_Price_Korea)
+z = np.polyfit(Electricity_consumption_Korea, Electricity_Price_Korea, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_Korea,p(Electricity_consumption_Korea),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of Korea\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+
+plt.scatter(Electricity_consumption_India, Electricity_Price_Inda)
+z = np.polyfit(Electricity_consumption_India, Electricity_Price_Inda, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_India,p(Electricity_consumption_India),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of India\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+plt.scatter(Electricity_consumption_China, Electricity_Price_China)
+z = np.polyfit(Electricity_consumption_China, Electricity_Price_China, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_China,p(Electricity_consumption_China),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of China\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+plt.scatter(Electricity_consumption_America, Electricity_Price_America)
+z = np.polyfit(Electricity_consumption_America, Electricity_Price_America, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_America,p(Electricity_consumption_America),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of US\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+plt.scatter(Electricity_consumption_EU, Electricity_Price_EU)
+z = np.polyfit(Electricity_consumption_EU, Electricity_Price_EU, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_EU,p(Electricity_consumption_EU),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of EU\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+plt.scatter(Electricity_consumption_South_Africa, Electricity_Price_South_Africa)
+z = np.polyfit(Electricity_consumption_South_Africa, Electricity_Price_South_Africa, 1)
+p = np.poly1d(z)
+plt.plot(Electricity_consumption_South_Africa,p(Electricity_consumption_South_Africa),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption and Price of Africa\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Electricity Consumption')
+plt.ylabel('Electricity Price')
+
+plt.show()
+
+
+# Function for figuring out Transition of the Change in Electricity consumption
+def Transition_of_change(array):
+    data = []
+    for i in range(len(array)-1):
+        percent = round((array[i+1] /(array[i] / 100)) - 100, 2)
+        data.append(percent)
+    print(data)
+    
+
+print("Electricity_consumption_America")
+Transition_of_change(Electricity_consumption_America)
+print()
+print("Electricity_consumption_EU")
+Transition_of_change(Electricity_consumption_EU)
+print()
+print("Electricity_consumption_Germany")
+Transition_of_change(Electricity_consumption_Germany)
+print()
+print("Electricity_consumption_Korea")
+Transition_of_change(Electricity_consumption_Korea)
+print()
+print("Electricity_consumption_China")
+Transition_of_change(Electricity_consumption_China)
+print()
+print("Electricity_consumption_India")
+Transition_of_change(Electricity_consumption_India)
+print()
+print("Electricity_consumption_South_Africa")
+Transition_of_change(Electricity_consumption_South_Africa)
+print()
+print("Electricity_Price_America")
+Transition_of_change(Electricity_Price_America)
+print()
+print("Electricity_Price_EU")
+Transition_of_change(Electricity_Price_EU)
+print()
+print("Electricity_Price_Germany_1")
+Transition_of_change(Electricity_Price_Germany_1)
+print()
+print("Electricity_Price_Germany_2")
+Transition_of_change(Electricity_Price_Germany_2)
+print()
+print("Electricity_Price_Korea")
+Transition_of_change(Electricity_Price_Korea)
+print()
+print("Electricity_Price_China")
+Transition_of_change(Electricity_Price_China)
+print()
+print("Electricity_Price_Inda")
+Transition_of_change(Electricity_Price_Inda)
+print()
+print("Electricity_Price_South_Africa")
+Transition_of_change(Electricity_Price_South_Africa)
+print()
+
+
+# Transition of the Change in Electricity consumption of developed countries
+Electricity_consumption_America_F = [-1.08, 1.29, 0.67, -0.13, 0.84, -0.76, 4.24, -2.13]  
+Electricity_consumption_EU_F = [0.55, -0.64, -1.85, 1.55, 1.22, 1.26, 0.16, -1.38]   
+Electricity_consumption_Germany_F= [-0.24, -0.21, -2.1, 0.81, -0.03, -0.0, -1.17, -3.28] 
+Electricity_consumption_Korea_F =[2.03, -4.64, -2.78, -22.86, 26.85, -7.3, 0.0, -10.24]
+
+# Transition of the Change in developing countries 
+Electricity_consumption_China_F = [5.88, 9.12, 7.3, 0.86, 6.08, 8.54, 6.43, 5.33]       
+Electricity_consumption_India_F = [5.89, 6.38, 9.88, 5.17, 5.87, 5.61, 6.88, 1.15]      
+Electricity_consumption_South_Africa_F = [-2.86, -0.26, -0.48, -0.35, -1.23, 0.75, 0.84, -1.92]
+
+# Transition of the Change in Electricity price of developed countries
+Electricity_Price_America_F = [0.0, 1.54, 3.79, 0.73, -2.17, 2.22, -1.45, -0.0]     
+Electricity_Price_EU_F = [5.8, 4.49, 2.15, 1.87, -2.75, 0.24, 2.12, 4.15]      
+Electricity_Price_Germany_1_F = [3.98, 9.98, 1.82, -0.59, 2.09, 2.49, -0.86, 0.43]
+Electricity_Price_Germany_2_F = [4.17, 10.75, 1.97, -0.97, 0.81, 2.58, -1.73, -0.48]
+Electricity_Price_Korea_F =[10.14, 6.58, 4.94, 1.18, -1.16, -0.0, -0.0, -0.0]
+
+# Transition of the Change in Electricity price of developed countries
+Electricity_Price_China_F = [0.0, 0.0, 0.0, 8.04, 0.0, 0.0, 0.0, 0.0]
+Electricity_Price_Inda_F =[16.0, 10.34, 3.12, -0.0, 4.55, 0.0, 2.9, 7.04]
+Electricity_Price_South_Africa_F = [11.43, 1.28, 0.0, 7.59, 0.0, -1.18, 5.95, 10.11]
+
+
+
+# function for average Transition of the Change data
+
+def average_Transition(array):
+    length = len(array)
+    data = [0] * 8
+    for i in range(length):
+        for j in range(8):
+            data[j] += array[i][j]
+            
+    for k in range(8):
+        data[k] = round((data[k] / length), 2)
+        
+    print(data)
+
+Electricity_consumption_develped_F = [ [-1.08, 1.29, 0.67, -0.13, 0.84, -0.76, 4.24, -2.13], 
+                                       [0.55, -0.64, -1.85, 1.55, 1.22, 1.26, 0.16, -1.38],
+                                       [-0.24, -0.21, -2.1, 0.81, -0.03, -0.0, -1.17, -3.28], 
+                                       [2.03, -4.64, -2.78, -22.86, 26.85, -7.3, 0.0, -10.24]]
+ 
+Electricity_consumption_develping_F = [[5.88, 9.12, 7.3, 0.86, 6.08, 8.54, 6.43, 5.33], 
+                                       [5.89, 6.38, 9.88, 5.17, 5.87, 5.61, 6.88, 1.15], 
+                                       [-2.86, -0.26, -0.48, -0.35, -1.23, 0.75, 0.84, -1.92]]
+
+Electricity_price_develped_F = [[0.0, 1.54, 3.79, 0.73, -2.17, 2.22, -1.45, -0.0], 
+                                [5.8, 4.49, 2.15, 1.87, -2.75, 0.24, 2.12, 4.15],
+                                [3.98, 9.98, 1.82, -0.59, 2.09, 2.49, -0.86, 0.43],
+                                [4.17, 10.75, 1.97, -0.97, 0.81, 2.58, -1.73, -0.48],
+                                [10.14, 6.58, 4.94, 1.18, -1.16, -0.0, -0.0, -0.0]]
+
+Electricity_price_develping_F = [[0.0, 0.0, 0.0, 8.04, 0.0, 0.0, 0.0, 0.0],
+                                [16.0, 10.34, 3.12, -0.0, 4.55, 0.0, 2.9, 7.04],
+                                [11.43, 1.28, 0.0, 7.59, 0.0, -1.18, 5.95, 10.11]]
+
+exclude_Korea_consumption = [ [-1.08, 1.29, 0.67, -0.13, 0.84, -0.76, 4.24, -2.13], 
+                              [0.55, -0.64, -1.85, 1.55, 1.22, 1.26, 0.16, -1.38],
+                              [-0.24, -0.21, -2.1, 0.81, -0.03, -0.0, -1.17, -3.28]]
+
+
+
+exclude_Korea_price =  [[0.0, 1.54, 3.79, 0.73, -2.17, 2.22, -1.45, -0.0], 
+                        [5.8, 4.49, 2.15, 1.87, -2.75, 0.24, 2.12, 4.15],
+                        [3.98, 9.98, 1.82, -0.59, 2.09, 2.49, -0.86, 0.43],
+                        [4.17, 10.75, 1.97, -0.97, 0.81, 2.58, -1.73, -0.48]]
+
+
+print("Average Transition of the Change in Electricity_consumption_develped_F")
+average_Transition(Electricity_consumption_develped_F)
+
+print("Average Transition of the Change in Electricity_consumption_develping_FF")
+average_Transition(Electricity_consumption_develping_F)
+
+print("Average Transition of the Change in Electricity_price_develped_F")
+average_Transition(Electricity_price_develped_F)
+
+print("Average Transition of the Change in Electricity_price_develping_F")
+average_Transition(Electricity_price_develping_F)
+
+print("Average Transition of the Change in Electricity_consumption_develped_F_exclude")
+average_Transition(exclude_Korea_consumption)
+
+print("Average Transition of the Change in Electricity_price_develped_F_exclude")
+average_Transition(exclude_Korea_price)
+
+year = [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019] 
+Average_Transition_in_Electricity_consumption_develped_F = [0.31, -1.05, -1.52, -5.16, 7.22, -1.7, 0.81, -4.26]
+Average_Transition_in_Electricity_consumption_develping_F =[2.97, 5.08, 5.57, 1.89, 3.57, 4.97, 4.72, 1.52]
+Average_Transition_in_Electricity_price_develped_F = [4.82, 6.67, 2.93, 0.44, -0.64, 1.51, -0.38, 0.82]
+Average_Transition_in_Electricity_price_develping_F = [9.14, 3.87, 1.04, 5.21, 1.52, -0.39, 2.95, 5.72]
+Average_Transition_in_Electricity_consumption_develped_F_exclude = [-0.26, 0.15, -1.09, 0.74, 0.68, 0.17, 1.08, -2.26]
+Average_Transition_in_Electricity_price_develped_F_exclude = [3.49, 6.69, 2.43, 0.26, -0.51, 1.88, -0.48, 1.02]
+
+
+plt.scatter(year, Average_Transition_in_Electricity_consumption_develped_F)
+z = np.polyfit(year, Average_Transition_in_Electricity_consumption_develped_F, 1)
+p = np.poly1d(z)
+plt.plot(year,p(year),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption change in Developed Countries\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+
+plt.show()
+
+plt.scatter(year, Average_Transition_in_Electricity_consumption_develping_F)
+z = np.polyfit(year, Average_Transition_in_Electricity_consumption_develping_F, 1)
+p = np.poly1d(z)
+plt.plot(year,p(year),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption change in Developing Countries\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+
+plt.show()
+
+plt.scatter(year, Average_Transition_in_Electricity_price_develped_F)
+z = np.polyfit(year, Average_Transition_in_Electricity_price_develped_F, 1)
+p = np.poly1d(z)
+plt.plot(year,p(year),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Price change in Developed Countries\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+
+plt.show()
+
+plt.scatter(year, Average_Transition_in_Electricity_price_develping_F)
+z = np.polyfit(year, Average_Transition_in_Electricity_price_develping_F, 1)
+p = np.poly1d(z)
+plt.plot(year,p(year),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Price change in Developing Countries\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+
+plt.show()
+
+
+# case without Korea
+plt.scatter(year, Average_Transition_in_Electricity_consumption_develped_F_exclude)
+z = np.polyfit(year, Average_Transition_in_Electricity_consumption_develped_F_exclude, 1)
+p = np.poly1d(z)
+plt.plot(year,p(year),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Electricity Consumption change in Developed Countries (without Korea)\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+
+plt.show()
+
+
+
+plt.plot(year, Average_Transition_in_Electricity_consumption_develped_F)
+plt.plot(year, Average_Transition_in_Electricity_consumption_develping_F)
+plt.title('Electricity Consumption change ', fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+plt.legend(['Developed Countries', 'Developing Countries'])
+
+plt.show()
+
+
+plt.plot(year, Average_Transition_in_Electricity_price_develped_F)
+plt.plot(year, Average_Transition_in_Electricity_price_develping_F)
+plt.title('Electricity Price change', fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Price(%)')
+plt.legend(['Developed Countries', 'Developing Countries'])
+
+plt.show()
+
+
+#Exclude Korea verison 
+plt.plot(year, Average_Transition_in_Electricity_consumption_develped_F_exclude)
+plt.plot(year, Average_Transition_in_Electricity_consumption_develping_F)
+plt.title('Electricity Consumption change (without Korea)', fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Consumption(%)')
+plt.legend(['Developed Countries', 'Developing Countries'])
+
+plt.show()
+
+
+#Exclude Korea verison 
+plt.plot(year, Average_Transition_in_Electricity_price_develped_F_exclude)
+plt.plot(year, Average_Transition_in_Electricity_price_develping_F)
+plt.title('Electricity Price change (without Korea)', fontsize=20)
+plt.xlabel('Year')
+plt.ylabel('Trend of Energy Price(%)')
+plt.legend(['Developed Countries', 'Developing Countries'])
+
+plt.show()
