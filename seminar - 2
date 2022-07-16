@@ -1,0 +1,142 @@
+import pandas as pd 
+import matplotlib.pylab as plt
+import numpy as np
+
+
+
+# Waste Energy Content   Kwh / kg
+#              paper, plastic, glass, wood, textiles, organic, others, inert
+waste_content = [4.39, 9.05, 0.00, 4.73, 5.20, 1.55, 3.36, 0.00]
+
+India_energy =  [5.7, 3.9, 2.1, 0.00, 3.5, 41.8, 2.7, 40.3] 
+China_energy =  [9.2, 10.3, 2.9, 3.3, 3.1, 47.7, 2.4 ,21.3]
+Africa_energy = [4.1, 2.1, 4.6, 0.00, 0.00, 56.5, 24.4, 8.3]
+
+US_energy =     [27.0, 12.8, 4.5, 6.2, 0.00, 28.1, 12.4, 0.00] 
+Germany_energy= [28.0, 0.00, 9.0, 0.00, 4.4, 32.8, 25.9, 0.00]
+Korea_energy =  [10.12, 8.75, 4.60, 0.00, 0.00, 62.85, 10.65, 2.93]
+
+# Food waste, paper, plastic, textile, rubber, leather, garden trimmings, wood, glass, metal
+moisture = [70, 5.5, 2, 10, 2, 10, 60, 20, 2, 2.5]
+
+India_moisture = [41.80, 5.7, 3.9, 3,5, 0.00, 0.8, 0.00, 0.00, 2.1, 1.7] 
+China_moisture = 50.3
+Africa_moisture = [56.6, 4.1, 2.1, 0.00, 1.4, 0.00, 0.00, 0.00, 4.6, 7.5]
+
+
+US_moisture = [14.6, 27, 12.8, 0.00, 0.00, 0.00, 13.5, 6.2, 4.5, 9,1]
+Germany_moisture = [16.2, 28.0, 0.00, 2.2, 0.00, 0.00, 16.6, 0.00, 0.00, 2.2] 
+Korea_moisture = [61.6, 10.12, 8.75, 0.00, 0.00, 0.00, 1.25, 0.00, 4.6, 0.82]
+
+
+# function for figuring out energy content of waste
+def waste_energy_content(content, waste):
+    result = 0 
+    for i in range(len(content)):
+        result += content[i] * waste[i]
+    
+    result = round(result, 2)
+    print(result)
+    
+    
+# function for figuring out moisture content of waste
+def waste_moisture_content(content, waste):
+    result = 0 
+    for i in range(len(content)):
+        result += content[i] * waste[i]
+    
+    result = result / 100
+    result = round(result, 2)
+    print(result)
+
+
+print("India waste energy content")
+waste_energy_content(waste_content, India_energy)
+
+print("China waste energy content")
+waste_energy_content(waste_content, China_energy)
+
+print("Africa waste energy content")
+waste_energy_content(waste_content, Africa_energy)
+
+print("US waste energy content")
+waste_energy_content(waste_content, US_energy)
+
+print("Germany waste energy content")
+waste_energy_content(waste_content, Germany_energy)
+
+print("Korea waste energy content")
+waste_energy_content(waste_content, Korea_energy)
+
+# waste energy content of each country 
+india_content = 152.38
+China_content = 247.33
+Africa_content = 206.56
+US_content = 348.92
+Germany_content = 283.66
+Korea_content = 256.82
+energy_content = [152.38, 247.33, 206.56, 348.92, 283.66, 256.82]
+
+
+
+# waste energy content of developing countries
+developing_content = [152.38, 247.33, 206.56]
+print("average energy contents of developing countries", round(sum(developing_content) / len(developing_content), 2))
+aver_developing_content = 202.09
+
+# waste energy content of developed countries
+developed_content = [348.92, 283.66, 256.82]
+print("average energy contents of developed countries", round(sum(developed_content) / len(developing_content), 2))
+aver_developed_content = 296.47
+
+
+
+print("India waste moisture content")
+waste_moisture_content(moisture, India_moisture)
+
+print("China waste moisture content")
+print(China_moisture)
+
+print("Africa waste moisture content")
+waste_moisture_content(moisture, Africa_moisture)
+
+print("US waste moisture content")
+waste_moisture_content(moisture, US_moisture)
+
+print("Germany waste moisture content")
+waste_moisture_content(moisture, Germany_moisture)
+
+print("Korea waste moisture content")
+waste_moisture_content(moisture, Korea_moisture)
+
+India_moisture = 30.58
+China_moisture = 50.3
+Africa_moisture = 40.2
+US_moisture = 21.62
+Germany_moisture = 23.11
+Korea_moisture = 44.71
+
+moisture_content = [30.58, 50.3, 40.2, 21.62, 23.11, 44.71]
+
+# waste moisture content of developing countries
+developing_moisture_content = [30.58, 50.3, 40.2]
+print("average moisture contents of developing countries", round(sum(developing_moisture_content) / len(developing_moisture_content), 2))
+aver_developing_moisture_content = 40.36
+
+# waste moisture content of developed countries
+developed_moisture_content = [21.62, 23.11, 44.71]
+print("average moisture contents of developing countries", round(sum(developed_moisture_content) / len(developed_moisture_content), 2))
+aver_developed_moisture_content = 29.81
+
+
+# Graph
+plt.scatter(moisture_content, energy_content)
+z = np.polyfit(moisture_content, energy_content, 1)
+p = np.poly1d(z)
+plt.plot(moisture_content,p(moisture_content),"r--")
+print( "y=%.6fx+(%.6f)"%(z[0],z[1]))
+plt.title('Moisture and energy Content of Solid waste\n' "y=%.6fx+(%.6f)"%(z[0],z[1]), fontsize=20)
+plt.xlabel('Waste Moisture')
+plt.ylabel('Energy Content')
+
+plt.show()
